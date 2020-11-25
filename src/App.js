@@ -1,38 +1,36 @@
-
-
-
-
-import React, { Component } from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom'
-import Navbar from './components/layout/Navbar'
-import Dashboard from './components/dashboard/Dashboard'
-import ProjectDetails from './components/projects/ProjectDetails';
-import SignIn from './components/auth/SignIn';
-import SignUp from './components/auth/SignUp';
-import CreateProject from './components/projects/CreateProject';
-import {Provider} from 'react-redux'
-import store from './store'
-
-class App extends Component {
-  render() {
+import React from 'react'
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import Navbar from './components/Navbar'
+import Student from './components/students/Student';
+import StudentForm from './components/students/StudentForm';
+import Students from './components/students/Students'
+import { Provider } from "react-redux";
+import store ,{ rrfProps }  from "./store";
+import { ReactReduxFirebaseProvider } from "react-redux-firebase";
+import './styles/App.scss'
+import Login from './components/pages/Login';
+import PrivateRoute from "./components/routes/PrivateRoute";
+function App() {
     return (
-<Provider store={store}>
-      <BrowserRouter>
-        <div className="App">
-          <Navbar />
-          <Switch>
-             <Route exact path='/'component={Dashboard} />
-             <Route exact path='/project/:id' component={ProjectDetails}/>
-             <Route path='/signin' component={SignIn} />
-             <Route path='/signup' component={SignUp} />
-             <Route path='/create' component={CreateProject} />
-          </Switch>
-        </div>
-      </BrowserRouter>
- </Provider>
-
-    );
-  }
+        <>
+      <Provider store={store}>
+      <ReactReduxFirebaseProvider {...rrfProps}>
+         <BrowserRouter>
+         <PrivateRoute component={Navbar} />
+               <PrivateRoute exact path="/" component={Students} />
+               <PrivateRoute exact path="/student/:id" component={Student} />
+               <PrivateRoute
+                exact
+                path="/studentForm/:id?"
+                component={StudentForm}
+              />
+                   <Route exact path='/login' component={Login}/>
+                   {/* ///studentForm/:id? we give ? becase it should work in 2 way first in the dynamic part and second not in dynamic part */}
+        </BrowserRouter>
+    </ReactReduxFirebaseProvider>
+        </Provider>
+        </>
+    )
 }
 
-export default App;
+export default App
